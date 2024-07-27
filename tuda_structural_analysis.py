@@ -1,6 +1,6 @@
 # Created on 26.07.2024 at Akaflieg Darmstadt, Author @ akram_metar@akaflieg.tu-darmstadt.de
 # This is the official file containing all the functions and codes related to the structural analysis
-
+import numpy as np
 def Q_bars(E11,E22,G12,nu12,theta):
         '''Returns the Stiffness matrix or the Q_bar matrix for an individual lamina
         
@@ -49,7 +49,6 @@ def Q_bars(E11,E22,G12,nu12,theta):
         # Define the matrix as an numpy array and retun the array
         Q_bar = np.array([[Q11_bar,Q12_bar,Q16_bar],[Q12_bar,Q22_bar,Q26_bar],[Q16_bar,Q26_bar,Q66_bar]])
         return Q_bar
-
 
 
 def material_type(stiffness_matrix):
@@ -122,3 +121,104 @@ def material_type(stiffness_matrix):
         
     else:
         raise Exception('The given matrix is not a square matrix')
+    
+def stiffness_matrix_plane_strain(material):
+    '''Calculates the Stiffness matrix for an isotropic material for the plane strain condition
+
+    Parameters
+    ----------
+    material : list
+        The list of isotropic material properties in the form (E,nu)
+
+    Returns
+    -------
+    stiffness_matrix : numpy array, 3x3 matrix
+        Returns the stifness matrix in its standard form as described in the literature by Prof. Mittelstedt
+    '''
+    if len(material)==2:
+        E = material[0]
+        nu = material[1]
+        stiffness_matrix = (E/((1+nu)*(1-2*nu)))*np.array([[1-nu,nu,0],
+                                                         [nu,1-nu,0],
+                                                         [0,0,(1-2*nu)/2.0]])
+        return stiffness_matrix
+    else:
+        raise Exception('The provided material is not a list of lenght 2')
+
+
+def stiffness_matrix_plane_stress(material):
+    '''Calculates the Stiffness matrix for an isotropic material for the plane stress condition
+
+    Parameters
+    ----------
+    material : list
+        The list of isotropic material properties in the form (E,nu)
+
+    Returns
+    -------
+    stiffness_matrix : numpy array, 3x3 matrix
+        Returns the stifness matrix in its standard form as described in the literature by Prof. Mittelstedt
+    '''
+    if len(material)==2:
+        E = material[0]
+        nu = material[1]
+        stiffness_matrix = (E/(1-nu**2))*np.array([[1,nu,0],
+                                                  [nu,1,0],
+                                                  [0,0,(1-nu)/2.0]])
+        return stiffness_matrix
+    else:
+        raise Exception('The provided material is not a list of lenght 2')
+
+
+def complaince_matrix_plane_strain(material):
+    '''Calculates the Complaince matrix for an isotropic material for the plane strain condition
+
+    Parameters
+    ----------
+    material : list
+        The list of isotropic material properties in the form (E,nu)
+
+    Returns
+    -------
+    stiffness_matrix : numpy array, 3x3 matrix
+        Returns the complaince matrix in its standard form as described in the literature by Prof. Mittelstedt
+    '''
+    if len(material)==2:
+        E = material[0]
+        nu = material[1]
+        stiffness_matrix = ((1+nu)/(E))*np.array([[1-nu,-nu,0],
+                                                  [-nu,1-nu,0],
+                                                  [0,0,2.0]])
+        return stiffness_matrix
+    else:
+        raise Exception('The provided material is not a list of lenght 2')
+    
+
+def complaince_matrix_plane_stress(material):
+    '''Calculates the Complaince matrix for an isotropic material for the plane stress condition
+
+    Parameters
+    ----------
+    material : list
+        The list of isotropic material properties in the form (E,nu)
+
+    Returns
+    -------
+    stiffness_matrix : numpy array, 3x3 matrix
+        Returns the complaince matrix in its standard form as described in the literature by Prof. Mittelstedt
+    '''
+    if len(material)==2:
+        E = material[0]
+        nu = material[1]
+        stiffness_matrix = ((1)/(E))*np.array([[1,-nu,0],
+                                              [-nu,1,0],
+                                              [0,0,2.0*(1+nu)]])
+        return stiffness_matrix
+    else:
+        raise Exception('The provided material is not a list of lenght 2')
+
+
+
+
+
+
