@@ -219,6 +219,25 @@ def complaince_matrix_plane_stress(material):
 
 
 
+def strain_to_stress(stiffness_matrix,strain_vector):
+    '''Calculates the stress based on the strains and the stiffness matrix
 
+    Parameters
+    ----------
+    stiffness_matrix : numpy array, 3x3 or a 6x6 matrix
+        The stiffness matrix, you can create a stifness matrix with the function stiffness_matrix_plane_xxx
+    strain_vector : numpy array or a list
+        The strain vector, make the sure about the dimensions of the stiffness and the strain vector
+    
+
+    Return
+    ------
+    stress_vector : numpy array, 3x1 or a 6x1 vector
+        Stress Vector in its standard form
+    '''
+    strain_vector = np.array(strain_vector)
+    stress_vector = np.matmul(stiffness_matrix,strain_vector)
+    
+    return stress_vector
 
 
